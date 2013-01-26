@@ -1,3 +1,12 @@
+package tp1genie3;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 /**
  * La classe Tp2 simule un jeu de dés.  L'utilisateur doit parier sur le résultat
  * du lancer de trois dés effectués par l'ordinateur.  Ce montant misé est déduit 
@@ -11,6 +20,32 @@
 public class Tp1Genie3
 {
 
+    final static int NO_PARI_MIN = 1;  // Numéros de pari valides sont de 1 à 3, donc min 1
+    final static int NO_PARI_MAX = 4;  // Numéros de pari valides sont de 1 à 3, donc max 3
+    final static int MISE_MIN = 1;  // Nombre minimum de crédit à miser est 1
+    final static String MESS_VOICI_LES_DES = "\nVoici les trois dés : ";
+    
+    final static int GAIN_PARI_1 = 10;     // Gain en crédits pour pari 1
+    final static int GAIN_PARI_2 = 2;      // Gain en crédits pour pari 2
+    final static int GAIN_PARI_3 = 5;      // Gain en crédits pour pari 3
+    final static int GAIN_PARI_4 = 3;      // Gain en crédits pour pari 4 demande par le PO
+    final static int NO_PARI_PAREILS = 1;  // Numéro du pari pour les dés pareils
+    final static int NO_PARI_DIFF = 2;     // Numéro du pari pour les dés différents
+    final static int NO_PARI_SUITE = 3;    // Numéro du pari pour les dés formant une suite
+    final static int NO_PARI_EGAL7 = 4;    // Numéro du pari pour les dés formant une suite
+    final static String MESS_CREDITS = " crédits.";
+    
+    final static String MESS_CREDITS_EN_MAIN = "\nVous disposez maintenant de ";
+    final static String MESS_CREDIT = " crédit.";   
+    //final static String MESS_CREDITS = " crédits."; 
+    
+    final static int CREDIT_PAR_LANCER = 3;  //Nouvelle demande du PO
+    
+    final static String MESS_FIN_PARTIE = "\nVous avez terminé la partie avec ";
+    
+    final static String MESS_DEBUT_PARTIE = "\nJEU DU LANCER DES DÉS\n";
+    final static String MESS_DEBUT_SOULIGN = "=====================\n";
+    
     /**
      * Une question est affichée à l'écran et l'utilisateur doit y répondre par un
      * nombre entier.
@@ -53,8 +88,8 @@ public class Tp1Genie3
     public static int lireLePari (String menu)
     {
         int pari;                   // Numéro du pari entré par l'utilisateur
-        final int NO_PARI_MIN = 1;  // Numéros de pari valides sont de 1 à 3, donc min 1
-        final int NO_PARI_MAX = 3;  // Numéros de pari valides sont de 1 à 3, donc max 3
+        //final int NO_PARI_MIN = 1;  // Numéros de pari valides sont de 1 à 3, donc min 1
+        //final int NO_PARI_MAX = 4;  // Numéros de pari valides sont de 1 à 3, donc max 3
         
         // Afficher le menu et demander à l'utilisateur d'entrer son pari.
         //
@@ -84,7 +119,7 @@ public class Tp1Genie3
     public static int lireLaMise (String combienMise, int max)
     {
         int mise;                // Mise que le joueur a entrée
-        final int MISE_MIN = 1;  // Nombre minimum de crédit à miser est 1
+        //final int MISE_MIN = 1;  // Nombre minimum de crédit à miser est 1
         
         // Demander à l'utilisateur d'entrer sa mise.
         //
@@ -134,6 +169,30 @@ public class Tp1Genie3
         
     } // reponseEstOui
     
+    
+    public static boolean QuestionDebutJeu (String question, int credit)
+    {
+        boolean repOui = false;
+        String reponse;
+           
+        reponse = questionRepString ( question );
+            
+        while ( !(reponse.equals("p") || reponse.equals("q") || 
+                  reponse.equals("e") ) ) {
+            System.out.println ( MessagesTp2.MESS_ERREUR_PARTIE_ENR_QUIT );
+            reponse = questionRepString ( question );
+        } // while
+        
+        if ( reponse.equals("p") ) {
+            repOui = true;
+        } else if ( reponse.equals("e") ){
+            saveCredit(Integer.toString(credit)); //demande numero 5
+        }
+
+        return repOui;
+        
+    } // reponseEstOui
+    
  
     /**
      * Méthode qui affiche le résultat des 3 dés lancés.
@@ -145,9 +204,10 @@ public class Tp1Genie3
      */    
     public static void afficherLesDes (int de1, int de2, int de3)
     {
-        final String MESS_VOICI_LES_DES = "\nVoici les trois dés : ";
+        int somme = de1 + de2 + de3; //Demande nunero5 du PO
+        //final String MESS_VOICI_LES_DES = "\nVoici les trois dés : ";
          
-        System.out.println ( MESS_VOICI_LES_DES + de1 + " " + de2 + " " + de3 + "\n ");
+        System.out.println ( MESS_VOICI_LES_DES + de1 + " + " + de2 + " + " + de3 + " = "  + somme +"\n ");
         
     } // afficherLesDes
     
@@ -165,12 +225,15 @@ public class Tp1Genie3
     public static int determineNbFoisMise (int de1, int de2, int de3, int pari)
     {
         int nbFoisMise = 0;             // Nombre de fois la mise
-        final int GAIN_PARI_1 = 10;     // Gain en crédits pour pari 1
-        final int GAIN_PARI_2 = 2;      // Gain en crédits pour pari 2
-        final int GAIN_PARI_3 = 5;      // Gain en crédits pour pari 3
-        final int NO_PARI_PAREILS = 1;  // Numéro du pari pour les dés pareils
-        final int NO_PARI_DIFF = 2;     // Numéro du pari pour les dés différents
-        
+        //final int GAIN_PARI_1 = 10;     // Gain en crédits pour pari 1
+        //final int GAIN_PARI_2 = 2;      // Gain en crédits pour pari 2
+        //final int GAIN_PARI_3 = 5;      // Gain en crédits pour pari 3
+        //final int GAIN_PARI_4 = 3;      // Gain en crédits pour pari 4 demande par le PO
+        //final int NO_PARI_PAREILS = 1;  // Numéro du pari pour les dés pareils
+        //final int NO_PARI_DIFF = 2;     // Numéro du pari pour les dés différents
+        //final int NO_PARI_SUITE = 3;    // Numéro du pari pour les dés formant une suite
+        //final int NO_PARI_EGAL7 = 4;    // Numéro du pari pour les dés formant une suite
+        /*
         if ( pari == NO_PARI_PAREILS ) {
             if ( sontPareils ( de1, de2, de3 ) ) {
                 nbFoisMise = GAIN_PARI_1;
@@ -182,6 +245,26 @@ public class Tp1Genie3
         } else if ( sontUneSuite ( de1, de2, de3 ) ) {
             nbFoisMise = GAIN_PARI_3;
         }
+        */
+        
+        if ( pari == NO_PARI_PAREILS ) {
+            if ( sontPareils ( de1, de2, de3 ) ) {
+                nbFoisMise = GAIN_PARI_1;
+            }
+        } else if ( pari == NO_PARI_SUITE ) { 
+                if(sontUneSuite ( de1, de2, de3 )){
+                    nbFoisMise = GAIN_PARI_3;
+                }
+        }else if ( pari == NO_PARI_EGAL7 ) {
+            if (  sontEgale7( de1, de2, de3 ) ) {
+                nbFoisMise = GAIN_PARI_4;
+            }
+        }else if ( pari == NO_PARI_DIFF ) {
+            if ( sontDifferents( de1, de2, de3 ) ) {
+                nbFoisMise = GAIN_PARI_2;
+            }
+        } 
+        
         
         return nbFoisMise;
         
@@ -240,7 +323,7 @@ public class Tp1Genie3
     public static boolean sontUneSuite ( int de1, int de2, int de3 )
     {
         
-        int premChiffre = 0;    // Le dé ayant le plus petit chiffre
+        int premChiffre;    // Le dé ayant le plus petit chiffre
         
         // Trouver le chiffre le plus petit des 3 dés
         //
@@ -262,7 +345,28 @@ public class Tp1Genie3
         }
         
     } // sontUneSuite
-
+    
+    
+    /**
+     * Méthode qui détermine si la somme des valeurs des dés est egale a 7.  Si c'est le cas,
+     * la méthode retourne 'true', sinon elle retourne 'false'.
+     * 
+     * @param  de1      résultat du dé 1
+     * @param  de2      résultat du dé 2
+     * @param  de3      résultat du dé 3
+     * @return          true si les dés correspondent à une suite, sinon false est retourné 
+     */
+    //********************************//
+    public static boolean sontEgale7 ( int de1, int de2, int de3 )
+    {
+        int somme = de1 + de2 + de3;
+        boolean resultat = false;
+        if(somme == 7){
+            resultat = true;
+        }
+        return resultat;
+    } // sontEgale7
+    //*******************************//
     
     /**
      * Méthode qui réévalue le nombre de crédits en main selon le nombre de crédits
@@ -277,7 +381,7 @@ public class Tp1Genie3
     public static int calculerCreditsEnMain ( int enMain, int crMises, int nbFoisLaMise )
     {
         int gainEnCredits;          // Gain calculé en nombre de crédits
-        final String MESS_CREDITS = " crédits."; 
+        //final String MESS_CREDITS = " crédits."; 
 
         //  Si le nombre de fois la mise est égale à 0, ça indique que le joueur
         //  a perdu et un message en ce sens est affiché.  Sinon, le nombre de
@@ -306,9 +410,9 @@ public class Tp1Genie3
      */
     public static void afficherResultPari ( String message, int enMain )
     {
-        final String MESS_CREDITS_EN_MAIN = "\nVous disposez maintenant de ";
-        final String MESS_CREDIT = " crédit.";   
-        final String MESS_CREDITS = " crédits."; 
+        //final String MESS_CREDITS_EN_MAIN = "\nVous disposez maintenant de ";
+        //final String MESS_CREDIT = " crédit.";   
+        //final String MESS_CREDITS = " crédits."; 
         
         System.out.print ( message );
         
@@ -338,8 +442,12 @@ public class Tp1Genie3
         int de2;
         int de3;
         boolean deRelance = false;          // Indique si un des dés a été relancé
-        final int CREDIT_PAR_LANCER = 2;   // Il en coûte 2 crédits pour relancer un dé
-                
+        //final int CREDIT_PAR_LANCER = 2;   // Il en coûte 2 crédits pour relancer un dé
+        
+        //*******************************//
+        //final int CREDIT_PAR_LANCER = 3;  //Nouvelle demande du PO
+        //*******************************//
+        
         // Lancer les 3 dés et afficher le résultat
         //
         de1 = Aleatoire.lancerUnDe6();
@@ -393,9 +501,9 @@ public class Tp1Genie3
      */
     public static void afficherFinPartie ( int creditEnMain )
     {
-        final String MESS_FIN_PARTIE = "\nVous avez terminé la partie avec ";
-        final String MESS_CREDIT = " crédit";   
-        final String MESS_CREDITS = " crédits"; 
+        //final String MESS_FIN_PARTIE = "\nVous avez terminé la partie avec ";
+        //final String MESS_CREDIT = " crédit";   
+        //final String MESS_CREDITS = " crédits"; 
         
         System.out.print ( MESS_FIN_PARTIE + creditEnMain );
         if ( creditEnMain <= 1 ) {
@@ -415,14 +523,48 @@ public class Tp1Genie3
      */
     public static void afficherNomJeu ()
     {
-        final String MESS_DEBUT_PARTIE = "\nJEU DU LANCER DES DÉS\n";
-        final String MESS_DEBUT_SOULIGN = "=====================\n";
+        //final String MESS_DEBUT_PARTIE = "\nJEU DU LANCER DES DÉS\n";
+        //final String MESS_DEBUT_SOULIGN = "=====================\n";
 
         System.out.print ( MESS_DEBUT_PARTIE );
         System.out.println ( MESS_DEBUT_SOULIGN );
         
     } // afficherNomJeu    
     
+    
+    
+    public static void saveCredit(String credit){
+        try{
+            File save=new File("src/tp1genie3/Save.txt"); // définir l'arborescence
+            save.createNewFile();
+            FileWriter ffw=new FileWriter(save);
+            ffw.write(credit);  // écrire une ligne dans le fichier resultat.txt
+            ffw.write("\n"); // forcer le passage à la ligne
+            ffw.close(); // fermer le fichier à la fin des traitements
+        } catch (Exception e) {}
+    
+    }
+    
+    public static String chargerCredit( String src ){
+        String ligne = " ";
+        String credit = " ";
+        File file = new File(src);
+        try{
+            InputStream ips=new FileInputStream(src);
+            InputStreamReader ipsr=new InputStreamReader(ips);
+            BufferedReader br=new BufferedReader(ipsr);
+            
+            while ((ligne=br.readLine())!=null){
+                credit = ligne;
+                //System.out.println(ligne);
+            }
+            br.close();
+            file.deleteOnExit();
+        }catch (Exception e){
+            //System.out.println(e.toString());
+        }
+        return credit;
+    }
     
     public static void main ( String[] params ) {
         
@@ -436,6 +578,12 @@ public class Tp1Genie3
         //
         afficherNomJeu ();
         
+        File fichier = new File ("src/tp1genie3/Save.txt");
+        if(fichier.exists() && reponseEstOui ( MessagesTp2.MESS_VEUT_CHARGER_PARTIE )){
+            
+            creditsEnMain = Integer.parseInt(chargerCredit( "src/tp1genie3/Save.txt" ));
+        }
+        
         // Initialiser le processus aléatoire à l'aide d'un nombre saisi par l'utilisateur
         //
         Aleatoire.initialiserLesDes ( questionRepInt ( MessagesTp2.MESS_INITIALISER ) );
@@ -444,8 +592,8 @@ public class Tp1Genie3
         // L'utilisateur peut jouer tant qu'il a suffisamment de crédit en main et qu'il
         // manifeste son désir de jouer
         //
-        while ( creditsEnMain > 0 && reponseEstOui ( MessagesTp2.MESS_VEUT_JOUER ) ) {
-            
+        //while ( creditsEnMain > 0 && reponseEstOui ( MessagesTp2.MESS_VEUT_JOUER ) ) {
+        while ( creditsEnMain > 0 && QuestionDebutJeu ( MessagesTp2.MESS_VEUT_JOUER_ENREGISTRER_QUITTER, creditsEnMain ) ) {
             // Lire et valider le pari
             //
             pari = lireLePari ( "\n" + MessagesTp2.MENU );
