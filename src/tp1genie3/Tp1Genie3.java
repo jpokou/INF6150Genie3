@@ -55,7 +55,9 @@ public class Tp1Genie3
      */
     public static int questionRepInt (String question)
     {
-        System.out.print ( question );
+        try{
+            System.out.print ( question );
+        }catch
        
         return Clavier.lireIntLn ();
         

@@ -12,19 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 public class De {
     private int valeur;
-    private int min;
-    private int max;
+    private int min = 1;
+    private int max = 6;
     
     public De(){
         this.valeur = 1;
-        this.min = 1;
-        this.max = 6;
     }
     
      public De( int valeur ){
         this.valeur = valeur;
-        this.min = 1;
-        this.max = 6;
     }
     
     public De( int valeur, int min, int max ){
@@ -57,14 +53,22 @@ public class De {
         this.valeur = max;
     }
     
-    public int brasser(){
+    public void brasser(){
         //brasser le dé
-        return 0;
+        this.setValeur(Aleatoire.lancerUnDe6());
     }
     
     public static De brasser ( De de ){
-        de = new De( Aleatoire.lancerUnDe6());
+        de.setValeur(Aleatoire.lancerUnDe6());
         return de;      
-    } 
+    }
+    
+    public static De[] brasser ( De[] des ){
+        for(int i=0 ; i < des.length ; ++i){
+            des[i].setValeur(Aleatoire.lancerUnDe6());
+        }
+        
+        return des;      
+    }
     
 }

@@ -16,6 +16,7 @@ public class Partie {
     
     private De[] des;
     private Joueur[] joueurs;
+
     
     public Partie(){
     
