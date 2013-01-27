@@ -10,13 +10,14 @@ import java.util.List;
  * @author Boris
  */
 public class Joueur {
-    private int credit;
+    private int credit = 100;
     private int mise = 0;
+    private int pari = 0;
     
     //private Regle regle;
     
     public Joueur(){
-        this.credit = 100;
+        //this.credit = 100;
         //this.regle = new RegleDesDifferents();
     }
     
@@ -43,6 +44,10 @@ public class Joueur {
         return this.credit;
     }
     
+    public int getPari(){
+        return this.pari;
+    }
+    
     //public int getRegle(){
         //return this.credit;
     //}
@@ -52,7 +57,11 @@ public class Joueur {
     }
     
     public void setMise(int mise){
-        this.mise = mise ;
+        this.mise = mise;
+    }
+    
+    public void setPari(int pari){
+        this.pari = pari;
     }
     
     //public void setRegle(Regle regle){

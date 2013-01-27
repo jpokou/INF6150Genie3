@@ -61,10 +61,8 @@ public class Tp1Genie3
             reponse = Clavier.lireIntLn ();
         }catch(Exception e){
             reponse = questionRepInt ( question );
-        }
-       
+        } 
         return reponse;
-        
     } // questionRepInt
 
     
@@ -85,7 +83,6 @@ public class Tp1Genie3
             reponse = questionRepString ( question );
         }
         return reponse;
-        
     } // questionRepString
     
     
@@ -186,17 +183,17 @@ public class Tp1Genie3
         boolean repOui = false;
         String reponse;
            
-        reponse = questionRepString ( question );
+        reponse = questionRepString ( question ).toUpperCase();
             
-        while ( !(reponse.equals("p") || reponse.equals("q") || 
-                  reponse.equals("e") ) ) {
+        while ( !(reponse.equals("P") || reponse.equals("Q") || 
+                  reponse.equals("E") ) ) {
             System.out.println ( MessagesTp2.MESS_ERREUR_PARTIE_ENR_QUIT );
             reponse = questionRepString ( question );
         } // while
         
-        if ( reponse.equals("p") ) {
+        if ( reponse.equals("P") ) {
             repOui = true;
-        } else if ( reponse.equals("e") ){
+        } else if ( reponse.equals("Q") ){
             saveCredit(Integer.toString(credit)); //demande numero 5
         }
 

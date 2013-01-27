@@ -5,38 +5,38 @@
 package tp1genie3;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Boris
  */
 public class RegleDesSuite implements Regle {
-    private De[] des;
+    private List <De> des;
     private int facteur;
     
-    public RegleDesSuite( De[] des, int facteur ){
+    public RegleDesSuite( List <De> des, int facteur ){
         this.des = des;
         this.facteur = facteur;
     }
     
     public boolean estRespecte(){
-        int premChiffre;    // Le dé ayant le plus petit chiffre
-        boolean resultat = false;
-        
-        // Trouver le chiffre le plus petit des 3 dés
-        //
-        premChiffre = Math.min ( des[0].getValeur(), des[1].getValeur() );
-        premChiffre = Math.min ( premChiffre, des[2].getValeur() );
-        // Vérifier si un dé correspond au chiffre suivant du plus petit trouvé précédemment
-        //
-        if ( premChiffre + 1 == des[0].getValeur() || premChiffre + 1 == des[1].getValeur() || premChiffre + 1 == des[2].getValeur() ) {
-            // Vérifier si un dé correspond au 2ième chiffre suivant le plus petit trouvé précédemment
-            //
-            if ( premChiffre + 2 == des[0].getValeur() || premChiffre + 2 == des[1].getValeur() || premChiffre + 2 == des[2].getValeur() ) {
-                resultat = true;
-            } 
+        int minimum;    // Le dé ayant le plus petit chiffre
+        boolean resultat = true;
+        List <Integer> valeur = new ArrayList <Integer>() ;
+        minimum = des.get(0).getValeur();
+        for(int i = 0; i < des.size(); ++i){
+            valeur.add(des.get(i).getValeur());
+            if( des.get(i).getValeur() < minimum ){
+                minimum = des.get(i).getValeur(); 
+            }
+        }
+        for(int i = 0; i < des.size(); ++i){
+            if( !(valeur.contains(minimum)) ){
+                resultat = true; 
+            }
+            minimum = minimum +1;
         } 
-        
         return resultat;
     }
     

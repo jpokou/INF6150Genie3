@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -19,7 +21,7 @@ import java.io.InputStreamReader;
 public class Partie {
     
     final static String src = "src/tp1genie3/Save.txt";
-    private De[] des;
+    private List <De> des;
     private Joueur joueurs;
     
 
@@ -28,7 +30,7 @@ public class Partie {
     
     }
     
-    public Partie( De[] des, Joueur joueurs, int fact){
+    public Partie( List <De> des, Joueur joueurs, int fact){
         this.des = des;
         this.joueurs = joueurs;
          Aleatoire.initialiserLesDes ( fact );
@@ -40,8 +42,8 @@ public class Partie {
     
     public int SommeDes(){
         int somme = 0;
-        for(int i = 0; i < des.length; ++i){
-            somme = somme + des[i].getValeur();
+        for(int i = 0; i < des.size(); ++i){
+            somme = somme + des.get(i).getValeur();
         }         
         return somme;
     }
@@ -64,6 +66,7 @@ public class Partie {
     
     public static void lancerPartie(){
         Joueur joueur1;
+        List<De> des = new ArrayList<>();
         //debut jeu
         afficherDebutJeu();
         //load save
@@ -74,9 +77,25 @@ public class Partie {
             joueur1.setCredit( Integer.parseInt( Memoire.chargerCredit( "src/tp1genie3/Save.txt" ) ) );
         }
         
-        //joueur1.setChoix();
+        //etape0
+        Aleatoire.initialiserLesDes ( questionRepInt ( MessagesTp2.MESS_INITIALISER ) );
         
-        //joueur1.setPari();
+        //joueur1.setChoix();
+        //etape1
+        
+        //etape2
+        joueur1.setPari(lireLePari ( "\n" + MessagesTp2.MENU ));
+        //etape3
+        joueur1.setMise(lireLaMise ( "\n" + MessagesTp2.MESS_COMBIEN_MISE, creditsEnMain ));
+        
+        for(int i = 0; i < 3; ++i){
+            des.add(new De());
+        }
+        
+        
+        
+        
+        
         
         //
         
@@ -130,6 +149,18 @@ public class Partie {
         return reponse;
         
     } // questionRepString
+    
+    public static int questionRepInt (String question)
+    {
+        int reponse;
+        try{
+            System.out.print ( question );
+            reponse = Clavier.lireIntLn ();
+        }catch(Exception e){
+            reponse = questionRepInt ( question );
+        } 
+        return reponse;
+    } // questionRepInt
     
     
     

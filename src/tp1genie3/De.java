@@ -63,12 +63,36 @@ public class De {
         return de;      
     }
     
-    public static De[] brasser ( De[] des ){
-        for(int i=0 ; i < des.length ; ++i){
-            des[i].setValeur(Aleatoire.lancerUnDe6());
+    public static List<De> brasser ( List<De> des ){
+        for(int i=0 ; i < des.size() ; ++i){
+            des.get(i).setValeur(Aleatoire.lancerUnDe6());
         }
         
         return des;      
+    }
+    
+    public static void afficher( List<De> des ){
+        
+        int somme = 0; 
+        
+        for(int i=0 ; i < des.size() ; ++i){
+            somme = somme + des.get(i).getValeur();
+        }
+        //final String MESS_VOICI_LES_DES = "\n";
+        if(des.size() > 1 ){
+            System.out.println ( "Voici les " + des.size() + "dés : " );
+            for(int i=0 ; i < des.size() ; ++i){
+                System.out.print ( des.get(i) );
+                if( i < des.size() - 1){
+                    System.out.print ( " + " );
+                }
+            }
+            System.out.print( " = " + somme +"\n " );         
+        }else if( des.size() == 1 ){
+            System.out.println ( "Voici le dé : " + des.get(0) );
+        }else{
+            System.out.println ( "Il n'y a pas de dé.");
+        }
     }
     
 }
