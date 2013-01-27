@@ -56,5 +56,8 @@ public class Partie {
         return 0;
     }
     
-    
+    public static void lancerPartie(){
+        
+        
+    }
 }

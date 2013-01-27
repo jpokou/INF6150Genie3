@@ -55,11 +55,15 @@ public class Tp1Genie3
      */
     public static int questionRepInt (String question)
     {
+        int reponse;
         try{
             System.out.print ( question );
-        }catch
+            reponse = Clavier.lireIntLn ();
+        }catch(Exception e){
+            reponse = questionRepInt ( question );
+        }
        
-        return Clavier.lireIntLn ();
+        return reponse;
         
     } // questionRepInt
 
@@ -73,9 +77,14 @@ public class Tp1Genie3
      */
     public static String questionRepString (String question)
     {
-        System.out.print ( question );
-       
-        return Clavier.lireString ();
+        String reponse;
+        try{
+            System.out.print ( question );
+            reponse = Clavier.lireString ();
+        }catch(Exception e){
+            reponse = questionRepString ( question );
+        }
+        return reponse;
         
     } // questionRepString
     
