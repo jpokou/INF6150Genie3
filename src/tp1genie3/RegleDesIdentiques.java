@@ -11,18 +11,25 @@ import java.util.ArrayList;
  * @author Boris
  */
 public class RegleDesIdentiques implements Regle {
-    private ArrayList Des;
+    private De[] des;
     private int facteur;
     
-    public RegleDesIdentiques( ArrayList Des, int facteur ){
-        this.Des = Des;
+    public RegleDesIdentiques( De[] des, int facteur ){
+        this.des = des;
         this.facteur = facteur;
     }
     
     public boolean estRespecte(){
+        boolean respect = true;
+        for( int i = 0; i < des.length-1; ++i ){
+            if( des[i].getValeur() != des[i+1].getValeur()){ 
+                respect = false;    
+            }     
+        }
         return true;
     }
+    
     public int getFacteur(){
-        return 0;
+        return facteur;
     }
 }

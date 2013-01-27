@@ -4,25 +4,31 @@
  */
 package tp1genie3;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 /**
  *
  * @author Boris
  */
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Partie {
     
+    final static String src = "src/tp1genie3/Save.txt";
     private De[] des;
-    private Joueur[] joueurs;
+    private Joueur joueurs;
+    
 
     
     public Partie(){
     
     }
     
-    public Partie( De[] des, Joueur[] joueurs, int fact){
+    public Partie( De[] des, Joueur joueurs, int fact){
         this.des = des;
         this.joueurs = joueurs;
          Aleatoire.initialiserLesDes ( fact );
@@ -57,7 +63,74 @@ public class Partie {
     }
     
     public static void lancerPartie(){
+        Joueur joueur1;
+        //debut jeu
+        afficherDebutJeu();
+        //load save
+        joueur1 = new Joueur();
+        
+        File fichier = new File ("src/tp1genie3/Save.txt");
+        if(fichier.exists() && reponseEstOui ( MessagesTp2.MESS_VEUT_CHARGER_PARTIE )){
+            joueur1.setCredit( Integer.parseInt( Memoire.chargerCredit( "src/tp1genie3/Save.txt" ) ) );
+        }
+        
+        //joueur1.setChoix();
+        
+        //joueur1.setPari();
+        
+        //
+        
+        
+        //creer joueur
+        
+        //
+        
         
         
     }
+    
+    public static void afficherDebutJeu(){
+        System.out.print ( "\nJEU DU LANCER DES DÉS\n=====================\n" );
+    } // afficherNomJeu
+     
+     
+     
+    public static boolean reponseEstOui (String question)
+    {
+        boolean reponseBoolean = false;
+        String reponse; 
+        reponse = questionRepString ( question ).toUpperCase();
+        while ( !(reponse.equals("O") || reponse.equals("OUI") || 
+                  reponse.equals("N") || reponse.equals("NON")) ) {
+            System.out.println ( MessagesTp2.MESS_ERREUR_OUI_NON );
+            reponse = questionRepString ( question ).toUpperCase();
+        } // while
+        if ( reponse.equals("O") || reponse.equals("OUI") ) {
+            reponseBoolean = true;
+        } 
+        return reponseBoolean;
+    } // reponseEstOui
+    
+    /**
+     * Une question est affichée à l'écran et l'utilisateur doit y répondre par une
+     * chaîne de caractères.
+     * 
+     * @param  question   question qui sera affichée à l'écran
+     * @return            la chaine de caractère lue    
+     */
+    public static String questionRepString (String question)
+    {
+        String reponse;
+        try{
+            System.out.print ( question );
+            reponse = Clavier.lireString ();
+        }catch(Exception e){
+            reponse = questionRepString ( question );
+        }
+        return reponse;
+        
+    } // questionRepString
+    
+    
+    
 }

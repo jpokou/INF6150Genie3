@@ -11,20 +11,29 @@ import java.util.List;
  */
 public class Joueur {
     private int credit;
-    private int mise;
-    private Regle regle;
+    private int mise = 0;
+    
+    //private Regle regle;
     
     public Joueur(){
         this.credit = 100;
-        this.mise = 0;
         //this.regle = new RegleDesDifferents();
     }
     
-    public Joueur( int credit, int mise, Regle regle ){
+    public Joueur( int credit ){
+        this.credit = credit;
+    }
+    
+    public Joueur( int credit, int mise ){
         this.credit = credit;
         this.mise = mise;
-        this.regle = regle;
     }
+    
+    //public Joueur( int credit, int mise, Regle regle ){
+        //this.credit = credit;
+        //this.mise = mise;
+        //this.regle = regle;
+    //}
     
     public int getCredit(){
         return this.credit;
@@ -34,9 +43,9 @@ public class Joueur {
         return this.credit;
     }
     
-    public int getRegle(){
-        return this.credit;
-    }
+    //public int getRegle(){
+        //return this.credit;
+    //}
     
     public void setCredit(int credit){
         this.credit = credit;
@@ -46,7 +55,7 @@ public class Joueur {
         this.mise = mise ;
     }
     
-    public void setRegle(Regle regle){
-        this.regle = regle;
-    }    
+    //public void setRegle(Regle regle){
+        //this.regle = regle;
+    //}    
 }

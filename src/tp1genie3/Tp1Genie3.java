@@ -159,7 +159,7 @@ public class Tp1Genie3
      */    
     public static boolean reponseEstOui (String question)
     {
-        boolean repOui;
+        boolean repOui = false;
         String reponse;
            
         reponse = questionRepString ( question ).toUpperCase();
@@ -172,9 +172,9 @@ public class Tp1Genie3
         
         if ( reponse.equals("O") || reponse.equals("OUI") ) {
             repOui = true;
-        } else {
-            repOui = false;
-        }
+        } //else {
+            //repOui = false;
+        //}
 
         return repOui;
         
@@ -333,14 +333,12 @@ public class Tp1Genie3
      */
     public static boolean sontUneSuite ( int de1, int de2, int de3 )
     {
-        
         int premChiffre;    // Le dé ayant le plus petit chiffre
         
         // Trouver le chiffre le plus petit des 3 dés
         //
         premChiffre = Math.min ( de1, de2 );
         premChiffre = Math.min ( premChiffre, de3 );
-        
         // Vérifier si un dé correspond au chiffre suivant du plus petit trouvé précédemment
         //
         if ( premChiffre + 1 == de1 || premChiffre + 1 == de2 || premChiffre + 1 == de3 ) {

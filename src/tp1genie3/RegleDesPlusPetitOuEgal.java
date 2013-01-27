@@ -11,19 +11,28 @@ import java.util.ArrayList;
  * @author Boris
  */
 public class RegleDesPlusPetitOuEgal implements Regle {
-    private ArrayList Des;
+    private De[] des;
     private int facteur;
     
-    public RegleDesPlusPetitOuEgal( ArrayList Des, int facteur ){
-        this.Des = Des;
+    public RegleDesPlusPetitOuEgal( De[] des, int facteur ){
+        this.des = des;
         this.facteur = facteur;
     }
     
     public boolean estRespecte(){
-        return true;
+        int somme = 0;
+        boolean resultat = false;
+        for(int i = 0; i < des.length; ++i){
+            somme = somme + des[i].getValeur();
+        }    
+        if(somme == 7){
+            resultat = true;
+        }
+        return resultat;
     }
+    
     public int getFacteur(){
-        return 0;
+        return facteur;
     }
     
 }
