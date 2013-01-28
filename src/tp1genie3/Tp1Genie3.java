@@ -8,9 +8,43 @@
  * main ou lorsqu'il manifeste son désir de mettre fin à la partie.
  * 
  */
+package tp1genie3;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * La classe Tp2 simule un jeu de dés.  L'utilisateur doit parier sur le résultat
+ * du lancer de trois dés effectués par l'ordinateur.  Ce montant misé est déduit 
+ * de ce qu'il a en main.  L'ordinateur lance les dés.  L'utilisateur à le choix 
+ * de relancer chacun des dés une seule fois.  Ensuite, si le résultat final du 
+ * lancer des dés correspond à ce que l'utilisateur a parié, il empoche un certain
+ * nombre de crédits.  La partie termine lorsque le joueur n'a plus de crédit en
+ * main ou lorsqu'il manifeste son désir de mettre fin à la partie.
+ * 
+ */
 public class Tp1Genie3
 {
 
+    public final static int NO_PARI_MIN = 1;              // Numéros de pari valides sont de 1 à 3, donc min 1
+    public final static int NO_PARI_MAX = 4;              // Numéros de pari valides sont de 1 à 3, donc max 3
+    public final static int MISE_MIN = 1;                 // Nombre minimum de crédit à miser est 1
+    public final static int CREDIT_DEBUT = 100;           // Nombre de crédit lors d'une nouvelle partie
+    
+    public final static int GAIN_PARI_PAREILS = 10;       // Gain en crédits pour pari 1
+    public final static int GAIN_PARI_DIFF = 2;           // Gain en crédits pour pari 2
+    public final static int GAIN_PARI_SUITE = 5;          // Gain en crédits pour pari 3
+    public final static int GAIN_PARI_PETIT_OU_EGAL7 = 3; // Gain en crédits pour pari 4 demande par le PO
+    public final static int NO_PARI_PAREILS = 1;          // Numéro du pari pour les dés pareils
+    public final static int NO_PARI_DIFF = 2;             // Numéro du pari pour les dés différents
+    public final static int NO_PARI_SUITE = 3;            // Numéro du pari pour les dés formant une suite
+    public final static int NO_PARI_PETIT_OU_EGAL7 = 4;   // Numéro du pari pour les dés formant une suite
+    
+    public final static int CREDIT_PAR_LANCER = 3;        // Nouvelle demande du PO
+    public final static int REGLE_MIN = 1;                // Valeur minimum lors du choix d'une règle à l'affichage.
+    public final static int REGLE_MAX = 4;                // Valeur maximal lors du choix d'une règle à l'affichage.
+    
     /**
      * Une question est affichée à l'écran et l'utilisateur doit y répondre par un
      * nombre entier.
@@ -20,9 +54,23 @@ public class Tp1Genie3
      */
     public static int questionRepInt (String question)
     {
-        System.out.print ( question );
-       
-        return Clavier.lireIntLn ();
+        int reponse = -1;
+        boolean valide;
+        
+        do {
+            
+            try {
+                System.out.print ( question );
+                reponse = Integer.parseInt(Clavier.lireString());
+                valide = true;
+            } catch(Exception e) {
+                valide = false;
+                System.out.println(Messages.MESS_ERREUR_FORMAT_INVALIDE + "\n");
+            } 
+            
+        } while(!valide);
+        
+        return reponse;
         
     } // questionRepInt
 
@@ -37,9 +85,8 @@ public class Tp1Genie3
     public static String questionRepString (String question)
     {
         System.out.print ( question );
-       
+
         return Clavier.lireString ();
-        
     } // questionRepString
     
     
@@ -53,55 +100,48 @@ public class Tp1Genie3
     public static int lireLePari (String menu)
     {
         int pari;                   // Numéro du pari entré par l'utilisateur
-        final int NO_PARI_MIN = 1;  // Numéros de pari valides sont de 1 à 3, donc min 1
-        final int NO_PARI_MAX = 3;  // Numéros de pari valides sont de 1 à 3, donc max 3
         
         // Afficher le menu et demander à l'utilisateur d'entrer son pari.
         //
         pari = questionRepInt ( menu );
         
-        // Valider le pari pour qu'il corresponde à un choix valide (1 à 3)
+        // Valider le pari pour qu'il corresponde à un choix valide (1 à 4)
         //
-        while ( pari < NO_PARI_MIN || pari > NO_PARI_MAX ) {
-            System.out.println ( MessagesTp2.MESS_ERREUR_PARI );
+        while ( pari < REGLE_MIN || pari > REGLE_MAX ) {
+            System.out.println ( Messages.MESS_ERREUR_PARI );
             pari = questionRepInt ( menu );    
         } // while
-
+        
         return pari;
         
     } // lireLePari
 
-    
     /**
      * Demander à l'utilisateur d'entrer sa mise (nombre de crédits).  Valider la mise 
      * pour qu'elle soit supérieur à 0 et inférieur ou égale au nombre de crédits en main
      * et retourner la mise.
-     * 
-     * @param  combienMise   question pour connaître la mise du joueur
-     * @param  max           nombre de crédits maximum que le joueur peut miser (crédits en main)
-     * @return mise          nombre de crédits misés par le joueur pour le prochain pari
+     * @param  question      question pour connaître la mise du joueur
      */
-    public static int lireLaMise (String combienMise, int max)
+    public static int lireLaMise (String question, Joueur joueur)
     {
-        int mise;                // Mise que le joueur a entrée
-        final int MISE_MIN = 1;  // Nombre minimum de crédit à miser est 1
+        int mise; // Mise que le joueur a entrée
         
         // Demander à l'utilisateur d'entrer sa mise.
         //
-        mise = questionRepInt ( combienMise );
+        mise = questionRepInt ( question );
         
         // Valider la mise pour qu'elle soit supérieure à 0 et inférieure ou égale 
         // au nombre maximum de crédits pouvant être misés
         //
-        while ( mise < MISE_MIN || mise > max ) {
-            System.out.println ( MessagesTp2.MESS_ERREUR_MISE );
-            mise = questionRepInt ( combienMise );    
+        while ( mise < MISE_MIN || mise > joueur.getCredit() ) {
+            System.out.println ( Messages.MESS_ERREUR_MISE );
+            mise = questionRepInt ( question );    
         } // while
 
         return mise;
         
     } // lireLaMise
-
+    
     
     /**
      * Une question est posée au joueur et le joueur doit répondre soit par oui ou
@@ -113,188 +153,100 @@ public class Tp1Genie3
      */    
     public static boolean reponseEstOui (String question)
     {
-        boolean repOui;
+        boolean repOui = false;
         String reponse;
            
         reponse = questionRepString ( question ).toUpperCase();
             
         while ( !(reponse.equals("O") || reponse.equals("OUI") || 
                   reponse.equals("N") || reponse.equals("NON")) ) {
-            System.out.println ( MessagesTp2.MESS_ERREUR_OUI_NON );
+            System.out.println ( Messages.MESS_ERREUR_OUI_NON );
             reponse = questionRepString ( question ).toUpperCase();
         } // while
         
         if ( reponse.equals("O") || reponse.equals("OUI") ) {
             repOui = true;
-        } else {
-            repOui = false;
+        } 
+
+        return repOui;
+        
+    } // reponseEstOui
+    
+    /**
+     * Question demandée à l'utilisateur s'il veut jouer une partie, enregister
+     * la partie courante ou quitter le jeu.
+     * @param question String qui représente la question.
+     * @param credit   Nombre de crédit du joueur.
+     * @return 
+     */
+    public static boolean questionDebutJeu (String question, int credit)
+    {
+        boolean repOui = false;
+        String reponse;
+           
+        reponse = questionRepString ( question ).toUpperCase();
+            
+        while ( !(reponse.equals("P") || reponse.equals("Q") || 
+                  reponse.equals("E") ) ) {
+            System.out.println ( Messages.MESS_ERREUR_PARTIE_ENR_QUIT );
+            reponse = questionRepString ( question ).toUpperCase();
+        } // while
+        
+        if ( reponse.equals("P") ) {
+            repOui = true;
+        } else if ( reponse.equals("E") ){
+            Memoire.saveCredit(Integer.toString(credit)); //demande numero 5
         }
 
         return repOui;
         
     } // reponseEstOui
     
- 
     /**
-     * Méthode qui affiche le résultat des 3 dés lancés.
+     * Méthode qui affiche le résultat des dés lancés.
      *
-     * @param  de1      résultat du dé1
-     * @param  de2      résultat du dé2
-     * @param  de3      résultat du dé3
-     * @return 
+     * @param  des Liste des dés à afficher.
      */    
-    public static void afficherLesDes (int de1, int de2, int de3)
-    {
-        final String MESS_VOICI_LES_DES = "\nVoici les trois dés : ";
+    public static void afficherLesDes (Partie partie) {
+        List<De> des = partie.getDes();
+        
+        System.out.print ( Messages.MESS_VOICI_LES_DES );
+        for (int i = 0; i < des.size(); ++i) {
+
+            System.out.print( des.get(i).getValeur());
+            if (i < des.size() - 1) {
+                System.out.print(" + ");
+            }
+            
+        }
          
-        System.out.println ( MESS_VOICI_LES_DES + de1 + " " + de2 + " " + de3 + "\n ");
-        
+        System.out.print(" = " + partie.getSommeDes() + "\n");
     } // afficherLesDes
-    
-
-    /**
-     * Cette méthode détermine s'il y a gain.  Si c'est le cas, elle évalue
-     * à combien de fois la mise le gain correspond.
-     * 
-     * @param  de1      résultat du dé 1
-     * @param  de2      résultat du dé 2
-     * @param  de3      résultat du dé 3
-     * @param  pari     le numéro du pari que le joueur a choisi
-     * @return nbFoisMise   le nombre de fois la mise selon le gain
-     */    
-    public static int determineNbFoisMise (int de1, int de2, int de3, int pari)
-    {
-        int nbFoisMise = 0;             // Nombre de fois la mise
-        final int GAIN_PARI_1 = 10;     // Gain en crédits pour pari 1
-        final int GAIN_PARI_2 = 2;      // Gain en crédits pour pari 2
-        final int GAIN_PARI_3 = 5;      // Gain en crédits pour pari 3
-        final int NO_PARI_PAREILS = 1;  // Numéro du pari pour les dés pareils
-        final int NO_PARI_DIFF = 2;     // Numéro du pari pour les dés différents
-        
-        if ( pari == NO_PARI_PAREILS ) {
-            if ( sontPareils ( de1, de2, de3 ) ) {
-                nbFoisMise = GAIN_PARI_1;
-            }
-        } else if ( pari == NO_PARI_DIFF ) {
-            if ( sontDifferents ( de1, de2, de3 ) ) {
-                nbFoisMise = GAIN_PARI_2;
-            }
-        } else if ( sontUneSuite ( de1, de2, de3 ) ) {
-            nbFoisMise = GAIN_PARI_3;
-        }
-        
-        return nbFoisMise;
-        
-    } // determineNbFoisMise
-    
-    
-    /**
-     * Méthode qui détermine si les dés sont tous pareils.  Si c'est le cas,
-     * la méthode retourne 'true', sinon elle retourne 'false'.
-     * 
-     * @param  de1      résultat du dé 1
-     * @param  de2      résultat du dé 2
-     * @param  de3      résultat du dé 3
-     * @return          true si les dés sont pareils, sinon false est retourné 
-     */
-    public static boolean sontPareils ( int de1, int de2, int de3 )
-    {
-        if ( de1 == de2 && de1 == de3 ) {
-            return true;
-        } else {
-            return false;
-        }
-        
-    } // sontPareils
-
-    
-    /**
-     * Méthode qui détermine si les dés sont tous différents.  Si c'est le cas,
-     * la méthode retourne 'true', sinon elle retourne 'false'.
-     * 
-     * @param  de1      résultat du dé 1
-     * @param  de2      résultat du dé 2
-     * @param  de3      résultat du dé 3
-     * @return          true si les dés sont différents, sinon false est retourné 
-     */
-    public static boolean sontDifferents ( int de1, int de2, int de3 )
-    {
-        if ( de1 != de2 && de1 != de3 && de2 != de3 ) {
-            return true;
-        } else {
-            return false;
-        }
-        
-    } // sontDifferents
-    
-    
-    /**
-     * Méthode qui détermine si les dés correspondent à une suite.  Si c'est le cas,
-     * la méthode retourne 'true', sinon elle retourne 'false'.
-     * 
-     * @param  de1      résultat du dé 1
-     * @param  de2      résultat du dé 2
-     * @param  de3      résultat du dé 3
-     * @return          true si les dés correspondent à une suite, sinon false est retourné 
-     */
-    public static boolean sontUneSuite ( int de1, int de2, int de3 )
-    {
-        
-        int premChiffre = 0;    // Le dé ayant le plus petit chiffre
-        
-        // Trouver le chiffre le plus petit des 3 dés
-        //
-        premChiffre = Math.min ( de1, de2 );
-        premChiffre = Math.min ( premChiffre, de3 );
-        
-        // Vérifier si un dé correspond au chiffre suivant du plus petit trouvé précédemment
-        //
-        if ( premChiffre + 1 == de1 || premChiffre + 1 == de2 || premChiffre + 1 == de3 ) {
-            // Vérifier si un dé correspond au 2ième chiffre suivant le plus petit trouvé précédemment
-            //
-            if ( premChiffre + 2 == de1 || premChiffre + 2 == de2 || premChiffre + 2 == de3 ) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-        
-    } // sontUneSuite
-
     
     /**
      * Méthode qui réévalue le nombre de crédits en main selon le nombre de crédits
-     * misés et le gain (nombre de fois la mise).  Le nombre de crédits en main 
-     * réévalué est retourné.
+     * misés et le gain (nombre de fois la mise).
      * 
-     * @param  enMain        le nombre de crédits dont dispose le joueur
-     * @param  crMises       le nombre de crédits que le joueur a misé
-     * @param  nbFoisLaMise  gain représenté en nombre de fois la mise
-     * @return               le nombre de crédits en main réévalué
+     * @param  joueur       Le joueur dont la mise sera évaluée.
+     * @param  partie       La partie que le joueur a jouée.
+     * @param  nbDeRelance  Le nombre de dés relancés.
      */
-    public static int calculerCreditsEnMain ( int enMain, int crMises, int nbFoisLaMise )
+    public static void calculerCreditsEnMain ( Joueur joueur, Partie partie, int nbDeRelance )
     {
-        int gainEnCredits;          // Gain calculé en nombre de crédits
-        final String MESS_CREDITS = " crédits."; 
-
-        //  Si le nombre de fois la mise est égale à 0, ça indique que le joueur
-        //  a perdu et un message en ce sens est affiché.  Sinon, le nombre de
-        //  crédits en main est réévalué.
-        //
-        if ( nbFoisLaMise == 0 ) {
-            afficherResultPari ( MessagesTp2.MESS_PERDU, enMain );
-        } else {
-            gainEnCredits = nbFoisLaMise * crMises;
-            enMain = enMain + gainEnCredits;
-            afficherResultPari ( MessagesTp2.MESS_GAGNE + gainEnCredits + MESS_CREDITS, enMain );
-        }        
+        int gainEnCredits;
+        int coutRelance = nbDeRelance * CREDIT_PAR_LANCER;
         
-        return enMain;
+        //  Si la règle est respectée, le joueur empoche les crédits, sinon il perd sa mise.
+        if (partie.regleEstRespecter(joueur.getRegle())) {
+            gainEnCredits = joueur.getCredit() - joueur.getMise() + partie.getCreditsGagnes() - coutRelance;
+            joueur.setCredit(gainEnCredits);
+            afficherResultPari ( Messages.MESS_GAGNE + partie.getCreditsGagnes() + Messages.MESS_CREDITS, joueur.getCredit() );
+        } else {
+            joueur.setCredit(joueur.getCredit() - joueur.getMise() - coutRelance);
+            afficherResultPari ( Messages.MESS_PERDU, joueur.getCredit() );
+        }
         
     } // calculerCreditsEnMain
-        
     
     /**
      * Méthode qui affiche s'il s'agit d'un gain ou non et qui affiche le nombre
@@ -306,84 +258,48 @@ public class Tp1Genie3
      */
     public static void afficherResultPari ( String message, int enMain )
     {
-        final String MESS_CREDITS_EN_MAIN = "\nVous disposez maintenant de ";
-        final String MESS_CREDIT = " crédit.";   
-        final String MESS_CREDITS = " crédits."; 
-        
         System.out.print ( message );
         
-        System.out.print ( MESS_CREDITS_EN_MAIN + enMain );
+        System.out.print ( Messages.MESS_CREDITS_EN_MAIN + enMain );
         if ( enMain > 1 ) {
-            System.out.println ( MESS_CREDITS );
+            System.out.println ( Messages.MESS_CREDITS );
         } else {
-            System.out.println ( MESS_CREDIT );
+            System.out.println ( Messages.MESS_CREDIT );
         }
         
     } // afficherResultPari
     
-   
     /**
-     * Méthode principale du jeu.  Les dés sont lancés, le résultat des dés est évalué
-     * pour déterminer s'il y a gain.  Si c'est le cas, le gain est calculé en nombre
-     * de crédits et le nombre de crédits en main est ajusté.
-     * 
-     * @param  creditsEnMain    crédits dont dispose le joueur
-     * @param  pari             numéro du pari que le joueur a choisi
-     * @param  creditsMises     le nombre de crédits misés par le joueur
-     * @return credit en main   le nombre de crédits dont le joueur dispose après le jeu
-     */    
-    public static int determinerResultPari (int creditsEnMain, int pari, int creditsMises)
-    {
-        int de1;
-        int de2;
-        int de3;
-        boolean deRelance = false;          // Indique si un des dés a été relancé
-        final int CREDIT_PAR_LANCER = 2;   // Il en coûte 2 crédits pour relancer un dé
-                
-        // Lancer les 3 dés et afficher le résultat
-        //
-        de1 = Aleatoire.lancerUnDe6();
-        de2 = Aleatoire.lancerUnDe6();
-        de3 = Aleatoire.lancerUnDe6();
-        afficherLesDes ( de1, de2, de3 );
+     * Pour chaque dé, demander si le joueur désire relancer le dé une deuxième fois.
+     * Il doit avoir au moins 3 crédits en main pour avoir la possibilité de relancer un dé.
+     * @param partie Partie contenant la liste des dés à relancer.
+     * @param joueur Le joueur qui relance les dés.
+     * @return       Le nombre de dés relancés.
+     */
+    public static int relancerDes(Partie partie, Joueur joueur) {
+        boolean deRelance = false;
+        int nbRelance = 0;
+        int creditTemp = joueur.getCredit() - joueur.getMise();
         
-        // Pour chaque dé, demander si le joueur désire relancer le dé une deuxième fois.
-        // Il doit avoir au moins 2 crédits en main pour avoir la possibilité de relancer un dé.
-        //
-        if ( creditsEnMain >= CREDIT_PAR_LANCER && 
-             reponseEstOui ( MessagesTp2.MESS_RELANCER + "1 ? " ) ) {
-            de1 = Aleatoire.lancerUnDe6();
-            creditsEnMain = creditsEnMain - CREDIT_PAR_LANCER;
-            deRelance = true;
+        for (int i = 0; i < partie.getDes().size(); ++i) {
+            if ( (creditTemp - (nbRelance * CREDIT_PAR_LANCER)) >= CREDIT_PAR_LANCER && 
+                reponseEstOui ( Messages.MESS_RELANCER + (i + 1) + " ? " ) ) {
+                partie.getDe(i).brasser();
+                deRelance = true;
+                nbRelance++;
+            }
         }
-        if ( creditsEnMain >= CREDIT_PAR_LANCER && 
-             reponseEstOui ( MessagesTp2.MESS_RELANCER + "2 ? " ) ) {
-            de2 = Aleatoire.lancerUnDe6();
-            creditsEnMain = creditsEnMain - CREDIT_PAR_LANCER;
-            deRelance = true;
-        }        
-        if ( creditsEnMain >= CREDIT_PAR_LANCER && 
-             reponseEstOui ( MessagesTp2.MESS_RELANCER + "3 ? " ) ) {
-            de3 = Aleatoire.lancerUnDe6();
-            creditsEnMain = creditsEnMain - CREDIT_PAR_LANCER;
-            deRelance = true;
-        }        
+        
         // Afficher le résultat des dés si au moins un des dés a été relancé
         //
         if ( deRelance ) {
-            afficherLesDes ( de1, de2, de3 );
+            afficherLesDes ( partie );
         } else {
             System.out.println ();
         }
         
-        // Selon le résultat du pari (determineNbFoisMise), calculer et retourner la nouvelle 
-        // valeur des crédits en main
-        //
-        return calculerCreditsEnMain ( creditsEnMain, creditsMises, 
-                                       determineNbFoisMise ( de1, de2, de3, pari ) );
-        
-    } // determinerResultPari
-    
+        return nbRelance;
+    }
     
     /**
      * Méthode qui affiche le nombre de crédits en main à la fin de la partie.
@@ -393,15 +309,12 @@ public class Tp1Genie3
      */
     public static void afficherFinPartie ( int creditEnMain )
     {
-        final String MESS_FIN_PARTIE = "\nVous avez terminé la partie avec ";
-        final String MESS_CREDIT = " crédit";   
-        final String MESS_CREDITS = " crédits"; 
         
-        System.out.print ( MESS_FIN_PARTIE + creditEnMain );
+        System.out.print ( Messages.MESS_FIN_PARTIE + creditEnMain );
         if ( creditEnMain <= 1 ) {
-            System.out.println ( MESS_CREDIT );
+            System.out.println ( Messages.MESS_CREDIT );
         } else {
-            System.out.println ( MESS_CREDITS );
+            System.out.println ( Messages.MESS_CREDITS );
         }
         
     } // afficherFinPartie    
@@ -415,58 +328,105 @@ public class Tp1Genie3
      */
     public static void afficherNomJeu ()
     {
-        final String MESS_DEBUT_PARTIE = "\nJEU DU LANCER DES DÉS\n";
-        final String MESS_DEBUT_SOULIGN = "=====================\n";
 
-        System.out.print ( MESS_DEBUT_PARTIE );
-        System.out.println ( MESS_DEBUT_SOULIGN );
+        System.out.print ( Messages.MESS_DEBUT_PARTIE );
+        System.out.println ( Messages.MESS_DEBUT_SOULIGN );
         
     } // afficherNomJeu    
+
+    /**
+     * Créer un objet Regle selon le choix de règle joueur.
+     * @param numero Le numéro de la règle.
+     * @return       L'objet Regle créer selon la règle choisie.
+     */
+    public static Regle creerRegle ( int numero ) {
+        
+        switch (numero){
+            case NO_PARI_PAREILS:
+                return new RegleDesIdentiques(null, GAIN_PARI_PAREILS); 
+            case NO_PARI_DIFF:
+                return new RegleDesDifferents(null, GAIN_PARI_DIFF);
+            case NO_PARI_SUITE:
+                return new RegleDesSuite(null, GAIN_PARI_SUITE);
+            case NO_PARI_PETIT_OU_EGAL7:
+                return new RegleDesPlusPetitOuEgal(null, GAIN_PARI_PETIT_OU_EGAL7, 7);
+        }
+        
+        return null;
+    }
     
+    /**
+     * Demander au joueur s'il veut charger une partie. Si oui on charge la partie et on efface
+     * le nombre de crédits sauvegardés, sinon le joueur commence avec 100 crédits.
+     * @param joueur Le joueur asocié au chargement de la partie.
+     */
+    public static void chargerUnePartie(Joueur joueur) {
+        File fichier = new File (Memoire.src);
+        
+        if(fichier.exists() && reponseEstOui ( Messages.MESS_VEUT_CHARGER_PARTIE )){
+            joueur.setCredit( Integer.parseInt( Memoire.chargerCredit( Memoire.src ) ) );
+        } else {
+            joueur.setCredit(CREDIT_DEBUT);
+        }
+    }
     
     public static void main ( String[] params ) {
+        Partie partie;
+        Joueur joueur1 = new Joueur();
+        List<De> des = new ArrayList<De>();
+        int nbDeRelance = 0;
         
-        // Déclaration des variables
-        //
-        int pari;                   // Le numéro du pari, peut être 1, 2 ou 3. Voir menu
-        int creditsMises;           // Le nombre de crédits que le joueur désire miser
-        int creditsEnMain = 100;    // Le joueur débute la partie avec 100 crédits en main
+        // Créer les dés.
+        for(int i = 0; i < 3; ++i){
+            des.add(new De()); // À chaque création de De le dé est lancé
+        }
+        
+        // Créer une nouvelle partie.
+        partie = new Partie( des, joueur1 );
         
         // Afficher le nom du jeu
         //
-        afficherNomJeu ();
+        afficherNomJeu();
         
+        // Charger une partie si demander.
+        chargerUnePartie(joueur1);
+
         // Initialiser le processus aléatoire à l'aide d'un nombre saisi par l'utilisateur
         //
-        Aleatoire.initialiserLesDes ( questionRepInt ( MessagesTp2.MESS_INITIALISER ) );
+        Aleatoire.initialiserLesDes ( questionRepInt ( Messages.MESS_INITIALISER ) );
         
         // Boucle principale du jeu.
         // L'utilisateur peut jouer tant qu'il a suffisamment de crédit en main et qu'il
         // manifeste son désir de jouer
         //
-        while ( creditsEnMain > 0 && reponseEstOui ( MessagesTp2.MESS_VEUT_JOUER ) ) {
-            
+        while ( partie.getJoueur().getCredit() > 0 && questionDebutJeu ( Messages.MESS_VEUT_JOUER_ENREGISTRER_QUITTER, partie.getJoueur().getCredit() ) ) {
             // Lire et valider le pari
             //
-            pari = lireLePari ( "\n" + MessagesTp2.MENU );
+            partie.getJoueur().setRegle(creerRegle(lireLePari ( "\n" + Messages.MENU )));
             
-            // Lire et valider la mise.  La mise doit être supérieur à 0 et inférieur
+            // Lire et valider la mise. La mise doit être supérieur à 0 et inférieur
             // ou égale au nombre de crédits en main.
             //
-            creditsMises = lireLaMise ( "\n" + MessagesTp2.MESS_COMBIEN_MISE, creditsEnMain );
+            partie.getJoueur().setMise(lireLaMise ( "\n" + Messages.MESS_COMBIEN_MISE, joueur1 ));
             
-            // Déduire les crédits misés du nombre de crédits en main
-            //
-            creditsEnMain = creditsEnMain - creditsMises;
+            // Brasser les dés.
+            partie.brasserDes();
             
-            // Jouer les dés et déterminer le résultat du pari.  Ré-évaluer les crédits
-            // en main selon le résultat du pari.
+            // afficher les dés
+            afficherLesDes(partie);
+            
+            // Offrir la possibilité de lancer les dés une deuxième fois.
+            nbDeRelance = relancerDes(partie, joueur1);
+            
+            // Ré-évaluer les crédits en main selon le résultat du pari.
             //
-            creditsEnMain = determinerResultPari ( creditsEnMain, pari, creditsMises );
+            calculerCreditsEnMain(joueur1, partie, nbDeRelance);
             
         } // while
-        
-        afficherFinPartie ( creditsEnMain );
+
+        afficherFinPartie ( joueur1.getCredit() );
         
     } // main
+    
+
 }

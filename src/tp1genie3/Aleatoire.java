@@ -1,3 +1,4 @@
+package tp1genie3;
 import java.util.*;
 
 /**
@@ -20,6 +21,16 @@ public class Aleatoire {
     } // initialiserLesDes
 
     /**
+     * Genere un nombre entier aleatoire entre une valeur minimum et maximum inclusivement
+     * @param min Valeur minimum
+     * @param max Valeur maximum
+     * @return un nombre entier aleatoire entre la valeur minimum et maximum inclusivement
+     */
+    public static int genererNombre ( int min, int max ) {
+        return (int) Math.floor ( ( max ) * generateur.nextDouble () ) + min;
+    } // lancerUnDe
+    
+    /**
      * Genere un nombre entier aleatoire entre 1 et nbfaces inclusivement
      * @param nbFaces nombre de faces du de
      * @return un nombre entier aleatoire entre 1 et nbfaces inclusivement
@@ -35,5 +46,5 @@ public class Aleatoire {
     public static int lancerUnDe6 () {
         return lancerUnDe ( 6 );
     } // lancerUnDe6
-    
+
 } // Aleatoire
