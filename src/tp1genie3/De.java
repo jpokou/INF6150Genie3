@@ -1,98 +1,122 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package tp1genie3;
+
+import java.util.List;
+
 /**
- *
+ * Classe qui représente un dé à jouer.
  * @author Boris
  */
-
-import java.util.ArrayList;
-import java.util.List;
 public class De {
+    
+    /** Valeur du dé. */
     private int valeur;
+    
+    /** Valeur minimum du dé. */
     private int min = 1;
+    
+    /** Valeur maximum du dé. */
     private int max = 6;
     
-    public De(){
-        this.valeur = 1;
+    /**
+     * Cosntructeur qui crée un dé à 6 face avec une valeur aléatoire.
+     */
+    public De() {
+        this.valeur = Aleatoire.genererNombre(min, max);
     }
     
-     public De( int valeur ){
+    /**
+     * Cosntructeur qui crée un dé à 6 face avec la valeur donnée.
+     * @param valeur La valeur du dé
+     */
+    public De( int valeur ) {
         this.valeur = valeur;
     }
     
-    public De( int valeur, int min, int max ){
-        this.valeur = valeur;
+    /**
+     * Cosntructeur qui crée un dé avec des valeur entre le minimum et maximum donnée inclusivement.
+     * @param min Valeur minimum du dé.
+     * @param max Valeur maximum du dé.
+     */
+    public De( int min, int max ) {
         this.min = min;
         this.max = max;
+        this.valeur = Aleatoire.genererNombre(min, max);
     }
     
-    public int getValeur(){
+    /**
+     * Retourne la valeur du dé.
+     * @return La valeur du dé.
+     */
+    public int getValeur() {
         return this.valeur; 
     }
     
-    public int getMin(){
+    /**
+     * Retourne la plus petite valeur possible du dé.
+     * @return  La plus petite valeur possible du dé.
+     */
+    public int getMin() {
         return this.min; 
     }
     
-    public int getMax(){
+    /**
+     * Retourne la plus grande valeur possible du dé.
+     * @return  La plus grande valeur possible du dé.
+     */
+    public int getMax() {
         return this.max; 
     }
     
-    public void setValeur( int valeur){
+    /**
+     * Set la nouvelle valeur du dé.
+     * @param valeur La nouvelle valeur du dé.
+     * @exception IllegalArgumentException si la valeur du dé n'est pas comprise entre la valeur minimum et maximum inclusivment.
+     */
+    public void setValeur( int valeur ) {
+        if (valeur < min && valeur > max) {
+            new IllegalArgumentException();
+        }
+        
         this.valeur = valeur;
     }
     
-    public void setMin( int min){
+    /**
+     * Set la valeur minimum du dé.
+     * @param min La valeur minimum du dé.
+     */
+    public void setMin( int min ) {
         this.valeur = min;
     }
     
+    /**
+     * Set la valeur maximum du dé.
+     * @param max La valeur maximum du dé.
+     */
     public void setMax( int max){
         this.valeur = max;
     }
     
-    public void brasser(){
-        //brasser le dé
-        this.setValeur(Aleatoire.lancerUnDe6());
+    /**
+     * Brasser le dé et retourne la valeur obtenue.
+     * @return Le résultat du dé.
+     */
+    public int brasser(){
+        this.valeur = Aleatoire.genererNombre(min, max);
+
+        return valeur;
     }
     
-    public static De brasser ( De de ){
-        de.setValeur(Aleatoire.lancerUnDe6());
-        return de;      
-    }
-    
+    /**
+     * Brasse la liste de dés et retourne une liste contenant le résultat de chaques dés.
+     * @param des Liste des dés à brasser.
+     * @return Liste contenant le résultat de chaques dés.
+     */
     public static List<De> brasser ( List<De> des ){
         for(int i=0 ; i < des.size() ; ++i){
-            des.get(i).setValeur(Aleatoire.lancerUnDe6());
+            des.get(i).valeur = Aleatoire.genererNombre(des.get(i).min, des.get(i).max);
         }
         
         return des;      
-    }
-    
-    public static void afficher( List<De> des ){
-        
-        int somme = 0; 
-        
-        for(int i=0 ; i < des.size() ; ++i){
-            somme = somme + des.get(i).getValeur();
-        }
-        //final String MESS_VOICI_LES_DES = "\n";
-        if(des.size() > 1 ){
-            System.out.println ( "Voici les " + des.size() + "dés : " );
-            for(int i=0 ; i < des.size() ; ++i){
-                System.out.print ( des.get(i) );
-                if( i < des.size() - 1){
-                    System.out.print ( " + " );
-                }
-            }
-            System.out.print( " = " + somme +"\n " );         
-        }else if( des.size() == 1 ){
-            System.out.println ( "Voici le dé : " + des.get(0) );
-        }else{
-            System.out.println ( "Il n'y a pas de dé.");
-        }
     }
     
 }
