@@ -36,4 +36,19 @@ public abstract class Regle {
         this.facteur = facteur;
     }
     
-}
+    /**
+     * Set une nouvelle liste de dés.
+     * @param des La liste de dés.
+     */
+    public void setDes(List <De> des) {
+        this.des = des;
+    }
+    
+    /**
+     * Retourne la liste de dés.
+     * @return La liste de dés.
+     */
+    public List<De> getDes() {
+        return this.des;
+    }
+}    
