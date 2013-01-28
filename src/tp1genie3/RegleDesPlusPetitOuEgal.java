@@ -39,7 +39,7 @@ public class RegleDesPlusPetitOuEgal extends Regle {
             somme = somme + des.get(i).getValeur();
         }    
         
-        if(somme == max){
+        if(somme <= max){
             resultat = true;
         }
         

@@ -103,7 +103,7 @@ public class De {
     public int brasser(){
         this.valeur = Aleatoire.genererNombre(min, max);
 
-        return valeur;
+        return this.valeur;
     }
     
     /**

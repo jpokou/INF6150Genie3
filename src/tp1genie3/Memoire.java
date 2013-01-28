@@ -30,13 +30,10 @@ public class Memoire {
             
             while ((ligne=br.readLine())!=null){
                 credit = ligne;
-                //System.out.println(ligne);
             }
             br.close();
-            file.deleteOnExit();
-        }catch (Exception e){
-            //System.out.println(e.toString());
-        }
+            file.delete();
+        }catch (Exception e){}
         return credit;
     }
     
@@ -53,13 +50,10 @@ public class Memoire {
             
             while ((ligne=br.readLine())!=null){
                 credit = ligne;
-                //System.out.println(ligne);
             }
             br.close();
-            file.deleteOnExit();
-        }catch (Exception e){
-            //System.out.println(e.toString());
-        }
+            file.delete();
+        }catch (Exception e){}
         return credit;
     }
     

@@ -1,6 +1,5 @@
 package tp1genie3;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,26 +26,27 @@ public class RegleDesSuite extends Regle {
      */
     @Override
     public boolean estRespecte(){
-        int minimum;    // Le dé ayant le plus petit chiffre
-        boolean resultat = true;
-        List <Integer> valeur = new ArrayList <Integer>() ;
-        minimum = des.get(0).getValeur();
+        int minimum = des.get(0).getValeur();  // Le dé ayant le plus petit chiffre
+        int temp;
         
-        for(int i = 0; i < des.size(); ++i){
-            valeur.add(des.get(i).getValeur());
-            
-            if( des.get(i).getValeur() < minimum ){
-                minimum = des.get(i).getValeur(); 
+        // Trier les valeurs
+        for (int i = 0; i < des.size(); ++i) {
+            for (int j = des.size() - 1; j > i; --j) {
+                if (des.get(j - 1).getValeur() > des.get(j).getValeur()) {
+                    temp = des.get(j - 1).getValeur();
+                    des.get(j - 1).setValeur(des.get(j).getValeur());
+                    des.get(j).setValeur(temp);
+                }
+            }
+        }
+
+        // Vérifier si on a une suite
+        for (int i = 0; i < des.size() - 1; ++i) {
+            if (des.get(i).getValeur() != (des.get(i + 1).getValeur() - 1)) {
+                return false;
             }
         }
         
-        for(int i = 0; i < des.size(); ++i){
-            if( !(valeur.contains(minimum)) ){
-                resultat = true; 
-            }
-            minimum = minimum +1;
-        } 
-        
-        return resultat;
+        return true;
     }
 }

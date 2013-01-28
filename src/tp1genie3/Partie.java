@@ -29,7 +29,7 @@ public class Partie {
      * Retourne la somme des dés.
      * @return Somme des dés.
      */
-    public int SommeDes() {
+    public int getSommeDes() {
         int somme = 0;
         
         for(int i = 0; i < des.size(); ++i) {
@@ -64,6 +64,14 @@ public class Partie {
     }
     
     /**
+     * Retourne la liste de dés.
+     * @return La liste de dés.
+     */
+    public List<De> getDe() {
+        return this.des;
+    }
+    
+    /**
      * Retourne si la règle donné en paramètre est respecté par rapport aux dés
      * @param regle La règle que l'on veut vérifier.
      * @return      true si la règle est valide, sinon false.
@@ -86,6 +94,22 @@ public class Partie {
             return 0;
         }
         
+    }
+    
+    /**
+     * Retourne le joueur de la partie.
+     * @return  Le joueur de la partie.
+     */
+    public Joueur getJoueur() {
+        return this.joueur;
+    }
+    
+    /**
+     * Retourne la liste de dés de la partie.
+     * @return  La liste de dés de la partie.
+     */
+    public List <De> getDes() {
+        return des;
     }
     
 }
