@@ -1,167 +1,91 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package tp1genie3;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Classe qui représente l'état d'une partie de dé.
  * @author Boris
  */
-
-
 public class Partie {
     
-    final static String src = "src/tp1genie3/Save.txt";
+    /** Liste des dés */
     private List <De> des;
-    private Joueur joueurs;
     
+    /** Joueur de la partie. */
+    private Joueur joueur;
 
-    
-    public Partie(){
-    
-    }
-    
-    public Partie( List <De> des, Joueur joueurs, int fact){
+    /**
+     * Constructeur qui crée une partie avec les dés et le joueur donnés en 
+     * paramètres.
+     * @param des     Liste contenant les dés de la partie.
+     * @param joueur  Joueur de la partie.
+     */
+    public Partie( List <De> des, Joueur joueur) {
         this.des = des;
-        this.joueurs = joueurs;
-         Aleatoire.initialiserLesDes ( fact );
+        this.joueur = joueur;
     }
     
-    public void nouvellePartie(){
-    
-    }
-    
-    public int SommeDes(){
+    /**
+     * Retourne la somme des dés.
+     * @return Somme des dés.
+     */
+    public int SommeDes() {
         int somme = 0;
-        for(int i = 0; i < des.size(); ++i){
+        
+        for(int i = 0; i < des.size(); ++i) {
             somme = somme + des.get(i).getValeur();
         }         
+        
         return somme;
     }
     
-    public int brasserDes(){
-        return 0;
-    }
-    
-    public De getDe( int index ){
-        return null;
-    }
-    
-    public boolean regleEstRespecter( Regle regle ){
-        return true;
-    }
-    
-    public int getCreditsGagnes(){
-        return 0;
-    }
-    
-    public static void lancerPartie(){
-        Joueur joueur1;
-        List<De> des = new ArrayList<>();
-        //debut jeu
-        afficherDebutJeu();
-        //load save
-        joueur1 = new Joueur();
+    /**
+     * Brasser les dés.
+     */
+    public void brasserDes() {
         
-        File fichier = new File ("src/tp1genie3/Save.txt");
-        if(fichier.exists() && reponseEstOui ( MessagesTp2.MESS_VEUT_CHARGER_PARTIE )){
-            joueur1.setCredit( Integer.parseInt( Memoire.chargerCredit( "src/tp1genie3/Save.txt" ) ) );
+        for (int i = 0; i < des.size(); ++i) {
+            des.get(i).brasser();
         }
         
-        //etape0
-        Aleatoire.initialiserLesDes ( questionRepInt ( MessagesTp2.MESS_INITIALISER ) );
-        
-        //joueur1.setChoix();
-        //etape1
-        
-        //etape2
-        joueur1.setPari(lireLePari ( "\n" + MessagesTp2.MENU ));
-        //etape3
-        joueur1.setMise(lireLaMise ( "\n" + MessagesTp2.MESS_COMBIEN_MISE, creditsEnMain ));
-        
-        for(int i = 0; i < 3; ++i){
-            des.add(new De());
-        }
-        
-        
-        
-        
-        
-        
-        //
-        
-        
-        //creer joueur
-        
-        //
-        
-        
-        
     }
-    
-    public static void afficherDebutJeu(){
-        System.out.print ( "\nJEU DU LANCER DES DÉS\n=====================\n" );
-    } // afficherNomJeu
-     
-     
-     
-    public static boolean reponseEstOui (String question)
-    {
-        boolean reponseBoolean = false;
-        String reponse; 
-        reponse = questionRepString ( question ).toUpperCase();
-        while ( !(reponse.equals("O") || reponse.equals("OUI") || 
-                  reponse.equals("N") || reponse.equals("NON")) ) {
-            System.out.println ( MessagesTp2.MESS_ERREUR_OUI_NON );
-            reponse = questionRepString ( question ).toUpperCase();
-        } // while
-        if ( reponse.equals("O") || reponse.equals("OUI") ) {
-            reponseBoolean = true;
-        } 
-        return reponseBoolean;
-    } // reponseEstOui
     
     /**
-     * Une question est affichée à l'écran et l'utilisateur doit y répondre par une
-     * chaîne de caractères.
-     * 
-     * @param  question   question qui sera affichée à l'écran
-     * @return            la chaine de caractère lue    
+     * Retourne le dé à l'index donné.
+     * @param index L'index du dé demandé.
+     * @return      Le dé à l'index donné.
      */
-    public static String questionRepString (String question)
-    {
-        String reponse;
-        try{
-            System.out.print ( question );
-            reponse = Clavier.lireString ();
-        }catch(Exception e){
-            reponse = questionRepString ( question );
+    public De getDe( int index ) {
+        if (index < 0 || index >= des.size()) {
+            new IllegalArgumentException();
         }
-        return reponse;
         
-    } // questionRepString
+        return des.get(index);
+    }
     
-    public static int questionRepInt (String question)
-    {
-        int reponse;
-        try{
-            System.out.print ( question );
-            reponse = Clavier.lireIntLn ();
-        }catch(Exception e){
-            reponse = questionRepInt ( question );
-        } 
-        return reponse;
-    } // questionRepInt
+    /**
+     * Retourne si la règle donné en paramètre est respecté par rapport aux dés
+     * @param regle La règle que l'on veut vérifier.
+     * @return      true si la règle est valide, sinon false.
+     */
+    public boolean regleEstRespecter( Regle regle ){
+        regle.setDes(des);
+        
+        return regle.estRespecte();
+    }
     
-    
+    /**
+     * Retourne le nombre de crédits gagnés par le joueur.
+     * @return Le nombre de crédits gagnés par le joueur.
+     */
+    public int getCreditsGagnes(){
+        
+        if (regleEstRespecter(joueur.getRegle())) {
+            return joueur.getMise() * joueur.getRegle().facteur;
+        } else {
+            return 0;
+        }
+        
+    }
     
 }
