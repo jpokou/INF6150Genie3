@@ -209,18 +209,52 @@ public class Tp1Genie3
      */    
     public static void afficherLesDes (Partie partie) {
         List<De> des = partie.getDes();
-        
-        System.out.print ( Messages.MESS_VOICI_LES_DES );
-        for (int i = 0; i < des.size(); ++i) {
+        StringBuilder buffer = new StringBuilder();
+        char[][] deGraphique = Messages.MESS_DE1;
 
-            System.out.print( des.get(i).getValeur());
-            if (i < des.size() - 1) {
-                System.out.print(" + ");
-            }
+        buffer.append(Messages.MESS_VOICI_LES_DES);
+        buffer.append("\n");
+        
+        // Écrire dans le buffer la valeur des dés et la somme
+        buffer.append("    ");
+        
+        for (int i = 0; i < des.size(); ++i) {
+            buffer.append(des.get(i).getValeur());
             
+            if (i < des.size() - 1) {
+                buffer.append("    +    ");
+            } else {
+                buffer.append("    = ");
+            }
         }
-         
-        System.out.print(" = " + partie.getSommeDes() + "\n");
+        
+        buffer.append(partie.getSommeDes());
+        buffer.append("\n");
+        
+        // Écrire dans la buffer les dés graphiques.
+        for (int i = 0; i < Messages.MESS_DE1.length; ++i) {
+            
+            for (int j = 0; j < des.size(); ++j) {
+
+                switch(des.get(j).getValeur()) {
+                    case 1 : deGraphique = Messages.MESS_DE1; break;
+                    case 2 : deGraphique = Messages.MESS_DE2; break;
+                    case 3 : deGraphique = Messages.MESS_DE3; break;
+                    case 4 : deGraphique = Messages.MESS_DE4; break;
+                    case 5 : deGraphique = Messages.MESS_DE5; break;
+                    case 6 : deGraphique = Messages.MESS_DE6; break;
+                }
+
+                buffer.append(String.copyValueOf(deGraphique[i]));
+                buffer.append(' ');
+            }
+
+            // Afficher le tout à l'écran.
+            buffer.append("\n");
+        }
+
+        System.out.println(buffer.toString());
+        
     } // afficherLesDes
     
     /**
