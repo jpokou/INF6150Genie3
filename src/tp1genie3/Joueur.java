@@ -1,3 +1,8 @@
+/**
+ * 
+ *Amélioration apportée: Création de la classe Joueur afin de permettre ultérieurement un jeu multijoueur.
+ */
+
 package tp1genie3;
 
 /**

@@ -1,3 +1,7 @@
+/**
+ * 
+ *Amélioration apportée: Découpé en classe, utilisation du polymorphisme et permet de rajouté des règles aiséments.
+ */
 package tp1genie3;
 
 import java.util.List;

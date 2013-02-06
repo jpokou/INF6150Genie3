@@ -1,4 +1,8 @@
 /**
+ * Amélioration apportée: Découpage du programme en orienté objet afin d'augmenter la maintenabilité globale du code. 
+ */
+
+/**
  * La classe Tp2 simule un jeu de dés.  L'utilisateur doit parier sur le résultat
  * du lancer de trois dés effectués par l'ordinateur.  Ce montant misé est déduit 
  * de ce qu'il a en main.  L'ordinateur lance les dés.  L'utilisateur à le choix 
@@ -48,6 +52,7 @@ public class NamelessSim1
     /**
      * Une question est affichée à l'écran et l'utilisateur doit y répondre par un
      * nombre entier.
+     * Amélioration apportée: Ajout d'une gestion d'exception sur le input de l'usager.
      * 
      * @param  question   question qui sera affichée à l'écran
      * @return            le nombre entier lu

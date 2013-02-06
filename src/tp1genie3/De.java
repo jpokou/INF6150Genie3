@@ -1,3 +1,9 @@
+/**
+ * 
+ * Amélioration apportée: Création de la classe pour augmenté la maintenabilité du programme.
+ *  Pourra également permettre l'ajout de dés différents au besoin.
+ */
+
 package tp1genie3;
 
 import java.util.List;

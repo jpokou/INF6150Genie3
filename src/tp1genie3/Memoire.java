@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 /**
  * Classe qui permet la sauvegarde des données dans un fichier .txt
  * ou de charger des données
- * @author Nameless
+ * @author Nameless  
  */
 public class Memoire {
     
