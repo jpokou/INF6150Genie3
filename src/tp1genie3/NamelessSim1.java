@@ -24,7 +24,7 @@ import java.util.List;
  * main ou lorsqu'il manifeste son désir de mettre fin à la partie.
  * 
  */
-public class Tp1Genie3
+public class NamelessSim1
 {
 
     public final static int NO_PARI_MIN = 1;              // Numéros de pari valides sont de 1 à 3, donc min 1
